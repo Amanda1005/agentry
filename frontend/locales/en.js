@@ -5,7 +5,7 @@ const en = {
     analytics:   'Analytics',
   },
   home: {
-    badge:    'AI Agent Intelligence · Base Chain',
+    badge:    'Agentic Behavior Scoring · Base Chain',
     title1:   'Detect AI Agent',
     title2:   'Behavior',
     titleEnd: 'in Any EVM Wallet',

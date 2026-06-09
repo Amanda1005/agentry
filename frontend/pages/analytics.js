@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Head from 'next/head'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import Nav from '../components/Nav'
 import { useLang } from '../contexts/LangContext'
@@ -25,6 +26,7 @@ export default function Analytics() {
 
   return (
     <>
+      <Head><title>Analytics · Agentry</title></Head>
       <Nav />
 
       <section style={{ background: 'transparent', padding: '120px 2rem 64px', position: 'relative', overflow: 'hidden' }}>

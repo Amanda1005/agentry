@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Head from 'next/head'
 import Nav from '../components/Nav'
 import { useLang } from '../contexts/LangContext'
 
@@ -18,6 +19,7 @@ export default function Leaderboard() {
 
   return (
     <>
+      <Head><title>Leaderboard · Agentry</title></Head>
       <Nav />
 
       <section style={{ background: 'transparent', padding: '120px 2rem 64px', position: 'relative', overflow: 'hidden' }}>

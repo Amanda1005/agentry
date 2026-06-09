@@ -5,7 +5,7 @@ const zh = {
     analytics:   '分析',
   },
   home: {
-    badge:    'AI Agent 智能分析 · Base 鏈',
+    badge:    '自主行為評分 · Base 鏈',
     title1:   '識別鏈上的',
     title2:   'AI Agent',
     titleEnd: '行為模式',

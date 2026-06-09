@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import Nav from '../components/Nav'
 import { useLang } from '../contexts/LangContext'
@@ -57,6 +58,7 @@ export default function Home() {
 
   return (
     <>
+      <Head><title>Agentry — Agentic Wallet Intelligence</title></Head>
       <Nav />
       <section style={{
         position: 'relative', minHeight: '100vh', background: '#060d1a',
