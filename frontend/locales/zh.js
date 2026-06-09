@@ -9,7 +9,7 @@ const zh = {
     title1:   '識別鏈上的',
     title2:   'AI Agent',
     titleEnd: '行為模式',
-    sub:      '基於 1,606 個已驗證 Agent 地址訓練的行為偵測模型。\n對任何 EVM 錢包評分 0–100，區分自動化程式與真人用戶。',
+    sub:      '基於 1,606 個已驗證 Agent 地址訓練的行為偵測模型。\nBase 鏈完整驗證 · 其他 EVM 鏈實驗性評分。',
     section:  '錢包查詢',
     heading:  '查詢任意錢包的 AI Agent 評分',
     score:    '評分',

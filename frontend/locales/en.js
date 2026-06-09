@@ -9,7 +9,7 @@ const en = {
     title1:   'Detect AI Agent',
     title2:   'Behavior',
     titleEnd: 'in Any EVM Wallet',
-    sub:      'Behavioral scoring model trained on 1,606 verified agent addresses.\nScore any EVM wallet 0–100 to distinguish automated agents from human users.',
+    sub:      'Behavioral scoring model trained on 1,606 verified agent addresses.\nValidated on Base · Experimental on Ethereum, Arbitrum, Optimism, Polygon.',
     section:  'Wallet Explorer',
     heading:  'Score any wallet for AI agent behavior',
     score:    'Score',
