@@ -3,7 +3,7 @@
 Score any EVM wallet 0–100 for autonomous, agent-like behavior.  
 Validated on Base · Experimental on Ethereum, Arbitrum, Optimism, Polygon.
 
-**Live demo →** _coming soon_
+**Live demo →** https://agentry-frontend.onrender.com
 
 ---
 
