@@ -19,7 +19,10 @@ export default function Leaderboard() {
 
   return (
     <>
-      <Head><title>Leaderboard · Agentry</title></Head>
+      <Head>
+        <title>Leaderboard · Agentry</title>
+        <link rel="icon" href="/logo.png" />
+      </Head>
       <Nav />
 
       <section style={{ background: 'transparent', padding: '120px 2rem 64px', position: 'relative', overflow: 'hidden' }}>

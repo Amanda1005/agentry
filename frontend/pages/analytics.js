@@ -26,7 +26,10 @@ export default function Analytics() {
 
   return (
     <>
-      <Head><title>Analytics · Agentry</title></Head>
+      <Head>
+        <title>Analytics · Agentry</title>
+        <link rel="icon" href="/logo.png" />
+      </Head>
       <Nav />
 
       <section style={{ background: 'transparent', padding: '120px 2rem 64px', position: 'relative', overflow: 'hidden' }}>

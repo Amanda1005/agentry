@@ -58,7 +58,10 @@ export default function Home() {
 
   return (
     <>
-      <Head><title>Agentry — Agentic Wallet Intelligence</title></Head>
+      <Head>
+        <title>Agentry — Agentic Wallet Intelligence</title>
+        <link rel="icon" href="/logo.png" />
+      </Head>
       <Nav />
       <section style={{
         position: 'relative', minHeight: '100vh', background: '#060d1a',
