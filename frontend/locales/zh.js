@@ -6,10 +6,10 @@ const zh = {
   },
   home: {
     badge:    'AI Agent 智能分析 · Base 鏈',
-    title1:   '交易前先確認',
-    title2:   '這個錢包',
-    titleEnd: '是不是 AI Agent',
-    sub:      'Base 鏈唯一經過驗證的 AI Agent 偵測模型。\n基於 1,606 個已知 Agent 地址的行為分析，對任何 EVM 錢包評分 0–100。',
+    title1:   '識別鏈上的',
+    title2:   'AI Agent',
+    titleEnd: '行為模式',
+    sub:      '基於 1,606 個已驗證 Agent 地址訓練的行為偵測模型。\n對任何 EVM 錢包評分 0–100，區分自動化程式與真人用戶。',
     section:  '錢包查詢',
     heading:  '查詢任意錢包的 AI Agent 評分',
     score:    '評分',
@@ -33,7 +33,7 @@ const zh = {
     experimental: '實驗性',
     whyTitle: '為什麼選擇 Agentry',
     why: [
-      ['⬡', '唯一經過驗證的模型',  '基於 Virtuals Protocol 和 ACP 的 1,606 個已驗證 AI Agent 錢包訓練。有真實依據，不是猜測。'],
+      ['⬡', '以真實 Agent 資料訓練', '基於 Virtuals Protocol 和 ACP 的 1,606 個已驗證 AI Agent 錢包訓練。有真實依據，不是猜測。'],
       ['◈', '設計上透明可解釋',    '每個分數都附帶 9 項行為特徵指紋，清楚說明為什麼這個錢包分數高或低。'],
       ['◯', '自動持續更新',        '新的 AI Agent 每週自動偵測入庫，排行榜反映生態系的即時狀態。'],
     ],
