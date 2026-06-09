@@ -31,6 +31,9 @@ const zh = {
       intervalCV:      '交易間隔變異係數',
     },
     experimental: '實驗性',
+    analyzeBtn:   '用 AI 分析師解釋',
+    analyzing:    '正在推理行為特徵…',
+    aiAnalysis:   'AI 分析師 — Foundry IQ',
     whyTitle: '為什麼選擇 Agentry',
     why: [
       ['⬡', '以真實 Agent 資料訓練', '基於 Virtuals Protocol 和 ACP 的 1,606 個已驗證 AI Agent 錢包訓練。有真實依據，不是猜測。'],

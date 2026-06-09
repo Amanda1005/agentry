@@ -31,6 +31,9 @@ const en = {
       intervalCV:      'Interval CV',
     },
     experimental: 'Experimental',
+    analyzeBtn:   'Explain with AI Analyst',
+    analyzing:    'Reasoning through behavioral signals…',
+    aiAnalysis:   'AI Analyst — Foundry IQ',
     whyTitle: 'Why Agentry',
     why: [
       ['⬡', 'Only Validated Model',    'Trained on 1,606 verified AI agent wallets from Virtuals Protocol and ACP. Not guesswork — ground truth.'],

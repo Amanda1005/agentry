@@ -14,11 +14,14 @@ export default function Home() {
   const { t } = useLang()
   const h = t.home
 
-  const [chain,   setChain]   = useState('Base')
-  const [address, setAddress] = useState('')
-  const [result,  setResult]  = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error,   setError]   = useState('')
+  const [chain,     setChain]     = useState('Base')
+  const [address,   setAddress]   = useState('')
+  const [result,    setResult]    = useState(null)
+  const [loading,   setLoading]   = useState(false)
+  const [error,     setError]     = useState('')
+  const [analyzing, setAnalyzing] = useState(false)
+  const [analysis,  setAnalysis]  = useState(null)
+  const [analysisError, setAnalysisError] = useState('')
 
   const isBase = chain === 'Base'
 
@@ -31,10 +34,26 @@ export default function Home() {
       const res = await fetch(`${API}/api/score?address=${addr}&chain=${CHAIN_KEY[chain]}`)
       if (!res.ok) { const e = await res.json(); throw new Error(e.detail || h.errNone) }
       setResult(await res.json())
+      setAnalysis(null)
+      setAnalysisError('')
     } catch (err) {
       setError(err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function handleAnalyze() {
+    const addr = address.trim()
+    setAnalysis(null); setAnalysisError(''); setAnalyzing(true)
+    try {
+      const res = await fetch(`${API}/api/analyze?address=${addr}&chain=${CHAIN_KEY[chain]}`)
+      if (!res.ok) { const e = await res.json(); throw new Error(e.detail || 'Analysis failed') }
+      setAnalysis(await res.json())
+    } catch (err) {
+      setAnalysisError(err.message)
+    } finally {
+      setAnalyzing(false)
     }
   }
 
@@ -152,6 +171,76 @@ export default function Home() {
                     </tbody>
                   </table>
                 </div>
+              </div>
+
+              {/* AI Analysis — Azure AI Foundry / Foundry IQ */}
+              <div style={{ marginTop: 16 }}>
+                {!analysis && !analyzing && (
+                  <button
+                    onClick={handleAnalyze}
+                    style={{
+                      width: '100%', padding: '13px 20px',
+                      background: 'linear-gradient(135deg, #1e3a5f 0%, #1a2f52 100%)',
+                      border: '1px solid #2563eb55', borderRadius: 10,
+                      color: '#93c5fd', fontWeight: 600, fontSize: 13,
+                      cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                    }}
+                  >
+                    <span style={{ fontSize: 15 }}>⬡</span>
+                    {h.analyzeBtn}
+                    <span style={{
+                      fontSize: 10, padding: '2px 7px', borderRadius: 20,
+                      background: '#2563eb33', color: '#60a5fa', fontWeight: 700,
+                    }}>Azure AI Foundry</span>
+                  </button>
+                )}
+
+                {analyzing && (
+                  <div style={{
+                    background: '#0a1628', border: '1px solid #2563eb40', borderRadius: 12,
+                    padding: '20px 20px', color: '#60a5fa', fontSize: 13,
+                    display: 'flex', alignItems: 'center', gap: 10,
+                  }}>
+                    <span style={{ animation: 'spin 1s linear infinite', display: 'inline-block' }}>⬡</span>
+                    {h.analyzing}
+                  </div>
+                )}
+
+                {analysisError && (
+                  <p style={{ color: '#f87171', fontSize: 13, marginTop: 8 }}>{analysisError}</p>
+                )}
+
+                {analysis && (
+                  <div style={{
+                    background: '#080f1e', border: '1px solid #2563eb50',
+                    borderTop: '2px solid #3b82f6', borderRadius: 12, padding: '20px 22px',
+                    marginTop: 4,
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                      <span style={{ color: '#60a5fa', fontSize: 16 }}>⬡</span>
+                      <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#60a5fa' }}>
+                        {h.aiAnalysis}
+                      </span>
+                      <span style={{
+                        marginLeft: 'auto', fontSize: 10, padding: '2px 8px',
+                        borderRadius: 20, background: '#1e3a5f', color: '#93c5fd',
+                        border: '1px solid #2563eb44',
+                      }}>
+                        {analysis.powered_by}
+                      </span>
+                    </div>
+                    <div style={{
+                      fontSize: 13, color: '#94a3b8', lineHeight: 1.75,
+                      whiteSpace: 'pre-wrap', fontFamily: 'Inter, sans-serif',
+                    }}>
+                      {analysis.analysis}
+                    </div>
+                    <div style={{ marginTop: 14, fontSize: 10, color: '#334155' }}>
+                      Knowledge source: {analysis.knowledge_source}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

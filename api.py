@@ -32,7 +32,7 @@ ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
@@ -193,3 +193,55 @@ def score_wallet(
     feat["validated"] = chain_key == "base"
     feat["label"] = "unknown"
     return feat
+
+
+# ── AI Wallet Analysis (Azure AI Foundry / Foundry IQ) ─────────────────────────
+
+@app.get("/api/analyze")
+@limiter.limit("5/minute")
+def analyze_wallet_ai(
+    request: Request,
+    address: str = Query(..., min_length=42, max_length=42),
+    chain:   str = Query("base"),
+):
+    if not ADDRESS_RE.match(address):
+        raise HTTPException(400, "Invalid Ethereum address format.")
+
+    if chain not in CHAIN_MAP:
+        raise HTTPException(400, "Unsupported chain.")
+
+    chain_key = CHAIN_MAP[chain]
+    addr = address.lower()
+
+    engine = get_engine()
+    if chain_key == "base":
+        with engine.connect() as conn:
+            row = conn.execute(text("""
+                SELECT wf.agent_score, wf.transfer_total, wf.active_days, wf.active_hours,
+                       wf.night_ratio, wf.weekend_ratio, wf.unique_counterparties,
+                       wf.unique_tokens, wf.top_token_ratio, wf.inter_tx_cv
+                FROM wallet_features wf
+                WHERE wf.address = :addr AND wf.chain = 'base'
+            """), {"addr": addr}).fetchone()
+    else:
+        with engine.connect() as conn:
+            row = conn.execute(text("""
+                SELECT agent_score, transfer_total, active_days, active_hours,
+                       night_ratio, weekend_ratio, unique_counterparties,
+                       unique_tokens, top_token_ratio, inter_tx_cv
+                FROM cross_chain_scores
+                WHERE address = :addr AND chain = :chain
+            """), {"addr": addr, "chain": chain_key}).fetchone()
+
+    if not row:
+        raise HTTPException(404, "Wallet not cached. Score it first via /api/score.")
+
+    score_data = dict(row._mapping)
+
+    from src.agents.wallet_analyst import analyze_wallet
+    try:
+        return analyze_wallet(address, chain_key, score_data)
+    except ValueError:
+        raise HTTPException(503, "AI analysis unavailable: GITHUB_TOKEN not configured.")
+    except Exception as exc:
+        raise HTTPException(500, f"AI analysis error: {exc}")

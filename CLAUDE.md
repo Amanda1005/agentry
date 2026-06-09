@@ -32,9 +32,9 @@ experimental scoring. Each non-Base result is clearly labeled experimental.
 ## Tech stack
 - **Backend:** FastAPI + SQLAlchemy + Postgres
 - **ML:** XGBoost, scikit-learn, SHAP
+- **AI Agent:** Azure AI Foundry (GitHub Models endpoint) · gpt-4o-mini · Foundry IQ in-code knowledge base
 - **Frontend:** Next.js (`frontend/`)
 - **Deploy:** Railway (API + weekly sync cron via `sync.py`)
-- **Analytics dashboard:** Streamlit removed; analytics now served via Next.js `/analytics` page
 - **Data:** Dune Analytics (primary, cached in Postgres), Alchemy RPC (live wallet features)
 
 ## Data — Base
@@ -60,17 +60,19 @@ experimental scoring. Each non-Base result is clearly labeled experimental.
 - ACP participation flag (Base only)
 
 ## Frontend structure (Next.js)
-- **`/` (index):** chain selector + wallet address input → score + behavioral fingerprint
+- **`/` (index):** chain selector + wallet address input → score + behavioral fingerprint + AI analysis panel
   - Base: fully validated result
   - Other EVM chains: scored with Base model, labeled "Experimental"
+  - "Explain with AI Analyst" button → calls `/api/analyze` → Foundry IQ grounded explanation
 - **`/analytics`:** score distribution by label (Base only)
 - **`/leaderboard`:** top-scoring Base wallets
-- **`/api/score`:** FastAPI endpoint backing all scoring requests
+- **`/api/score`:** XGBoost scoring endpoint
+- **`/api/analyze`:** Azure AI Foundry agent endpoint (Foundry IQ reasoning)
 
 ## Project structure
 
 ```
-api.py                    FastAPI backend (scoring endpoint)
+api.py                    FastAPI backend (scoring + AI analysis endpoints)
 sync.py                   Weekly incremental data sync (Railway cron)
 models/xgb_base.json      Trained XGBoost model
 frontend/                 Next.js frontend
@@ -101,10 +103,11 @@ src/
 ```
 
 ## Current phase
-**Deployed.** FastAPI backend + Next.js frontend live on Railway.
+**Deployed.** FastAPI backend + Next.js frontend live.
 Live demo: https://agentry-frontend.onrender.com
 
-Streamlit files removed. All dashboard pages are now Next.js.
+Azure AI Foundry (Foundry IQ) integration added for wallet AI analysis.
+All dashboard pages are Next.js. No Streamlit files remain.
 Weekly sync cron (`sync.py`) runs on Railway to pull new Virtuals/ACP addresses.
 
 ## Conventions
