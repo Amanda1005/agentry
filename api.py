@@ -243,5 +243,5 @@ def analyze_wallet_ai(
         return analyze_wallet(address, chain_key, score_data)
     except ValueError:
         raise HTTPException(503, "AI analysis unavailable: GITHUB_TOKEN not configured.")
-    except Exception as exc:
-        raise HTTPException(500, f"AI analysis error: {exc}")
+    except Exception:
+        raise HTTPException(500, "AI analysis temporarily unavailable.")
