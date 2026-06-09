@@ -30,10 +30,12 @@ experimental scoring. Each non-Base result is clearly labeled experimental.
   Revisit when ecosystem matures.
 
 ## Tech stack
-- Python (pandas, scikit-learn, xgboost), Postgres, Streamlit
-- SHAP for model explainability
-- Claude API for the LLM layer (wallet dossiers + plain-language score reasons)
-- Data: Dune Analytics (primary), Alchemy RPC (wallet feature fetch)
+- **Backend:** FastAPI + SQLAlchemy + Postgres
+- **ML:** XGBoost, scikit-learn, SHAP
+- **Frontend:** Next.js (`frontend/`)
+- **Deploy:** Railway (API + weekly sync cron via `sync.py`)
+- **Analytics dashboard:** Streamlit removed; analytics now served via Next.js `/analytics` page
+- **Data:** Dune Analytics (primary, cached in Postgres), Alchemy RPC (live wallet features)
 
 ## Data — Base
 
@@ -57,24 +59,35 @@ experimental scoring. Each non-Base result is clearly labeled experimental.
 - Diversity: unique_counterparties, unique_tokens, top_token_ratio
 - ACP participation flag (Base only)
 
-## Dashboard structure
-- **Main page:** chain selector + wallet address input → score + behavioral fingerprint
+## Frontend structure (Next.js)
+- **`/` (index):** chain selector + wallet address input → score + behavioral fingerprint
   - Base: fully validated result
   - Other EVM chains: scored with Base model, labeled "Experimental"
-- **Analytics page:** score distribution by label (Base only)
-- **Leaderboard page:** top-scoring Base wallets
+- **`/analytics`:** score distribution by label (Base only)
+- **`/leaderboard`:** top-scoring Base wallets
+- **`/api/score`:** FastAPI endpoint backing all scoring requests
 
 ## Project structure
 
 ```
+api.py                    FastAPI backend (scoring endpoint)
+sync.py                   Weekly incremental data sync (Railway cron)
+models/xgb_base.json      Trained XGBoost model
+frontend/                 Next.js frontend
+  pages/
+    index.js              Wallet scorer (home)
+    analytics.js          Score distribution analytics
+    leaderboard.js        Top-scoring wallets
+  components/             Shared UI components
+  locales/                i18n (en, zh)
 src/
-  labels/         # Ground truth label fetching (Base only)
+  labels/                 Ground truth label fetching (Base only)
     fetch_virtuals.py     Virtuals ERC-6551 TBA addresses (Dune)
     fetch_acp.py          ACP-active wallet addresses (Dune)
     fetch_negatives.py    MEV bots, EOAs, CEX wallets (Dune + BaseScan)
     load_labels.py        Orchestrates all label fetching → Postgres
     sql/                  Dune SQL queries (01–07)
-  features/       # Feature engineering
+  features/               Feature engineering
     fetch_transfers.py    ERC-20 transfer history via Alchemy (multi-chain)
     compute_features.py   Behavioral features from transfer data
     load_features.py      Orchestrates fetch + compute → wallet_features table
@@ -85,17 +98,14 @@ src/
     models.py             SQLAlchemy ORM (multi-chain schema)
   utils/
     dune_client.py        Dune API client
-models/
-  xgb_base.json           Trained Base model
-app.py                    Streamlit dashboard
 ```
 
 ## Current phase
-Dashboard polish + deployment.
-1. Refactor app.py into multi-page Streamlit (pages/).
-2. Main page: chain selector + wallet lookup.
-3. Analytics + Leaderboard as sub-pages.
-4. Update copy to reflect Base-core + EVM experimental framing.
+**Deployed.** FastAPI backend + Next.js frontend live on Railway.
+Live demo: https://agentry-frontend.onrender.com
+
+Streamlit files removed. All dashboard pages are now Next.js.
+Weekly sync cron (`sync.py`) runs on Railway to pull new Virtuals/ACP addresses.
 
 ## Conventions
 - Keep all copy honest and non-exaggerated.
