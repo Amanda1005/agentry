@@ -60,7 +60,7 @@ export default function Home() {
     <>
       <Head>
         <title>Agentry — Agentic Wallet Intelligence</title>
-        <link rel="icon" href="/logo.png" />
+        <link rel="icon" type="image/png" href="/logo.png" />
       </Head>
       <Nav />
       <section style={{

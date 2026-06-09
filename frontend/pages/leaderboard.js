@@ -21,7 +21,7 @@ export default function Leaderboard() {
     <>
       <Head>
         <title>Leaderboard · Agentry</title>
-        <link rel="icon" href="/logo.png" />
+        <link rel="icon" type="image/png" href="/logo.png" />
       </Head>
       <Nav />
 

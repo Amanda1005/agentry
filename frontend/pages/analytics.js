@@ -28,7 +28,7 @@ export default function Analytics() {
     <>
       <Head>
         <title>Analytics · Agentry</title>
-        <link rel="icon" href="/logo.png" />
+        <link rel="icon" type="image/png" href="/logo.png" />
       </Head>
       <Nav />
 
