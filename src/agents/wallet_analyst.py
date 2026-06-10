@@ -79,12 +79,12 @@ def analyze_wallet(address: str, chain: str, score_data: dict, lang: str = "en")
         {
             "role": "system",
             "content": (
-                "You are the Agentry Wallet Intelligence Analyst — an AI reasoning agent that "
+                ("請使用繁體中文回答所有內容。\n\n" if lang == "zh" else "")
+                + "You are the Agentry Wallet Intelligence Analyst — an AI reasoning agent that "
                 "identifies autonomous, agentic behavior in EVM blockchain wallets.\n\n"
                 "Use the following knowledge base to ground every claim with evidence:\n\n"
                 + FOUNDRY_IQ_KNOWLEDGE
                 + "\n\nReason step-by-step. Cite specific feature values. Be concise and technical."
-                + ("\n\nRespond entirely in Traditional Chinese (繁體中文)." if lang == "zh" else "")
             ),
         },
         {
