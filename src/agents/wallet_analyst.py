@@ -58,7 +58,7 @@ wallets from the Virtuals Protocol and ACP ecosystem.
 """
 
 
-def analyze_wallet(address: str, chain: str, score_data: dict) -> dict:
+def analyze_wallet(address: str, chain: str, score_data: dict, lang: str = "en") -> dict:
     token = (
         os.environ.get("GITHUB_TOKEN")
         or os.environ.get("AGENT_HACKATHON_API_KEY")
@@ -84,6 +84,7 @@ def analyze_wallet(address: str, chain: str, score_data: dict) -> dict:
                 "Use the following knowledge base to ground every claim with evidence:\n\n"
                 + FOUNDRY_IQ_KNOWLEDGE
                 + "\n\nReason step-by-step. Cite specific feature values. Be concise and technical."
+                + ("\n\nRespond entirely in Traditional Chinese (繁體中文)." if lang == "zh" else "")
             ),
         },
         {

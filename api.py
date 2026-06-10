@@ -221,6 +221,7 @@ def analyze_wallet_ai(
     request: Request,
     address: str = Query(..., min_length=42, max_length=42),
     chain:   str = Query("base"),
+    lang:    str = Query("en"),
     body:    ScorePayload = Body(...),
 ):
     if not ADDRESS_RE.match(address):
@@ -231,7 +232,7 @@ def analyze_wallet_ai(
 
     from src.agents.wallet_analyst import analyze_wallet
     try:
-        return analyze_wallet(address, CHAIN_MAP[chain], body.model_dump())
+        return analyze_wallet(address, CHAIN_MAP[chain], body.model_dump(), lang=lang)
     except ValueError:
         raise HTTPException(503, "AI analysis unavailable: GITHUB_TOKEN not configured.")
     except Exception:

@@ -11,7 +11,7 @@ const CHAIN_KEY = { Base: 'base', Ethereum: 'ethereum', Arbitrum: 'arbitrum', Op
 const API       = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 export default function Home() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const h = t.home
 
   const [chain,     setChain]     = useState('Base')
@@ -47,7 +47,7 @@ export default function Home() {
     const addr = address.trim()
     setAnalysis(null); setAnalysisError(''); setAnalyzing(true)
     try {
-      const res = await fetch(`${API}/api/analyze?address=${addr}&chain=${CHAIN_KEY[chain]}`, {
+      const res = await fetch(`${API}/api/analyze?address=${addr}&chain=${CHAIN_KEY[chain]}&lang=${lang}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(result),
