@@ -230,9 +230,16 @@ def analyze_wallet_ai(
     if chain not in CHAIN_MAP:
         raise HTTPException(400, "Unsupported chain.")
 
+    # Fall back to browser Accept-Language if frontend didn't pass lang
+    effective_lang = lang
+    if effective_lang == "en":
+        accept = request.headers.get("Accept-Language", "")
+        if "zh" in accept.lower():
+            effective_lang = "zh"
+
     from src.agents.wallet_analyst import analyze_wallet
     try:
-        return analyze_wallet(address, CHAIN_MAP[chain], body.model_dump(), lang=lang)
+        return analyze_wallet(address, CHAIN_MAP[chain], body.model_dump(), lang=effective_lang)
     except ValueError:
         raise HTTPException(503, "AI analysis unavailable: GITHUB_TOKEN not configured.")
     except Exception:
