@@ -131,6 +131,7 @@ export default function Home() {
 
             {/* Result */}
             {result && (
+              <>
               <div className="result-grid" style={{ marginTop: 28 }}>
                 <div style={{
                   background: '#0d1829', border: `1px solid ${accentColor}40`,
@@ -242,6 +243,7 @@ export default function Home() {
                   </div>
                 )}
               </div>
+              </>
             )}
           </div>
         </div>
