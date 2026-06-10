@@ -7,7 +7,9 @@ import os
 import re
 from datetime import datetime
 
-from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi import FastAPI, HTTPException, Query, Request, Body
+from pydantic import BaseModel
+from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
@@ -200,12 +202,26 @@ def score_wallet(
 
 # ── AI Wallet Analysis (Azure AI Foundry / Foundry IQ) ─────────────────────────
 
-@app.get("/api/analyze")
+class ScorePayload(BaseModel):
+    agent_score: float
+    active_days: Optional[float] = None
+    active_hours: Optional[float] = None
+    transfer_total: Optional[float] = None
+    night_ratio: Optional[float] = None
+    weekend_ratio: Optional[float] = None
+    unique_counterparties: Optional[float] = None
+    unique_tokens: Optional[float] = None
+    top_token_ratio: Optional[float] = None
+    inter_tx_cv: Optional[float] = None
+
+
+@app.post("/api/analyze")
 @limiter.limit("5/minute")
 def analyze_wallet_ai(
     request: Request,
     address: str = Query(..., min_length=42, max_length=42),
     chain:   str = Query("base"),
+    body:    ScorePayload = Body(...),
 ):
     if not ADDRESS_RE.match(address):
         raise HTTPException(400, "Invalid Ethereum address format.")
@@ -213,37 +229,9 @@ def analyze_wallet_ai(
     if chain not in CHAIN_MAP:
         raise HTTPException(400, "Unsupported chain.")
 
-    chain_key = CHAIN_MAP[chain]
-    addr = address.lower()
-
-    engine = get_engine()
-    if chain_key == "base":
-        with engine.connect() as conn:
-            row = conn.execute(text("""
-                SELECT wf.agent_score, wf.transfer_total, wf.active_days, wf.active_hours,
-                       wf.night_ratio, wf.weekend_ratio, wf.unique_counterparties,
-                       wf.unique_tokens, wf.top_token_ratio, wf.inter_tx_cv
-                FROM wallet_features wf
-                WHERE wf.address = :addr AND wf.chain = 'base'
-            """), {"addr": addr}).fetchone()
-    else:
-        with engine.connect() as conn:
-            row = conn.execute(text("""
-                SELECT agent_score, transfer_total, active_days, active_hours,
-                       night_ratio, weekend_ratio, unique_counterparties,
-                       unique_tokens, top_token_ratio, inter_tx_cv
-                FROM cross_chain_scores
-                WHERE address = :addr AND chain = :chain
-            """), {"addr": addr, "chain": chain_key}).fetchone()
-
-    if not row:
-        raise HTTPException(404, "Wallet not cached. Score it first via /api/score.")
-
-    score_data = dict(row._mapping)
-
     from src.agents.wallet_analyst import analyze_wallet
     try:
-        return analyze_wallet(address, chain_key, score_data)
+        return analyze_wallet(address, CHAIN_MAP[chain], body.model_dump())
     except ValueError:
         raise HTTPException(503, "AI analysis unavailable: GITHUB_TOKEN not configured.")
     except Exception:

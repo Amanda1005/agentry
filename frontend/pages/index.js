@@ -47,7 +47,11 @@ export default function Home() {
     const addr = address.trim()
     setAnalysis(null); setAnalysisError(''); setAnalyzing(true)
     try {
-      const res = await fetch(`${API}/api/analyze?address=${addr}&chain=${CHAIN_KEY[chain]}`)
+      const res = await fetch(`${API}/api/analyze?address=${addr}&chain=${CHAIN_KEY[chain]}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(result),
+      })
       if (!res.ok) { const e = await res.json(); throw new Error(e.detail || 'Analysis failed') }
       setAnalysis(await res.json())
     } catch (err) {
