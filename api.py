@@ -60,7 +60,8 @@ ADDRESS_RE = re.compile(r'^0x[0-9a-fA-F]{40}$')
 # ── Stats ──────────────────────────────────────────────────────────────────────
 
 @app.get("/api/stats")
-def get_stats():
+@limiter.limit("30/minute")
+def get_stats(request: Request):
     engine = get_engine()
     with engine.connect() as conn:
         total = conn.execute(text(
@@ -84,7 +85,8 @@ def get_stats():
 # ── Leaderboard ────────────────────────────────────────────────────────────────
 
 @app.get("/api/leaderboard")
-def get_leaderboard(limit: int = Query(50, le=200)):
+@limiter.limit("30/minute")
+def get_leaderboard(request: Request, limit: int = Query(50, le=200)):
     engine = get_engine()
     with engine.connect() as conn:
         df = pd.read_sql(text("""
@@ -103,7 +105,8 @@ def get_leaderboard(limit: int = Query(50, le=200)):
 # ── Distribution ───────────────────────────────────────────────────────────────
 
 @app.get("/api/distribution")
-def get_distribution():
+@limiter.limit("30/minute")
+def get_distribution(request: Request):
     engine = get_engine()
     with engine.connect() as conn:
         df = pd.read_sql(text("""
